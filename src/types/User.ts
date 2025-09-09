@@ -2,12 +2,12 @@ type EnumLike<T> = T[keyof T]
 
 const userRoles = {
   daemon: "DAEMON",
-  admin: "ADMIN",
-  networkad: "NETWORKAD",
+  admin: "SUPER_ADMIN",
+  networkad: "VICTIM",
 } as const
 
 export type UserRole = EnumLike<typeof userRoles>
-// "DAEMON" | "ADMIN" | "NETWORKAD"
+// "DAEMON" | "SUPER_ADMIN" | "VICTIM"
 
 export { userRoles }
 

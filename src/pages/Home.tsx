@@ -11,10 +11,9 @@ function Home() {
         }}
 
       >
-        {/* Overlay oscuro */}
+        
         <div className="absolute inset-0 bg-black/60"></div>
 
-        {/* Contenido de la primera sección */}
         <div className="relative z-10 text-center text-white px-4">
           <h1 className="text-5xl md:text-7xl font-bold mb-6 text-balance">Manur's Empire</h1>
           <p className="text-xl md:text-2xl text-gray-300 max-w-2xl mx-auto text-pretty">
@@ -23,7 +22,7 @@ function Home() {
         </div>
       </div>
 
-      {/* Botón flotante en el medio */}
+      
       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
         <Link
           to="/resistance"
@@ -33,7 +32,7 @@ function Home() {
         </Link>
       </div>
 
-      {/* Segunda sección con color sólido */}
+      
       <div className="h-screen bg-gradient-to-b from-gray-900 to-black flex items-center justify-center">
         <div className="text-center text-white px-4 max-w-4xl">
           <h2 className="text-4xl md:text-6xl font-bold mb-8 text-balance">Meet Andrei</h2>

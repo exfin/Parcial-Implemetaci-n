@@ -1,8 +1,166 @@
+import { useState } from "react"
+import { useEffect } from "react"
+import { EditDaemonCard } from "../components/cards/EditDaemon-card"
+
 export function DaemonManagement() {
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    name: "",
+  })
+  const [isLoading, setIsLoading] = useState(false)
+  const [message, setMessage] = useState("")
+  const [daemons, setDaemons] = useState<any[]>([])
+  const [loadingDaemons, setLoadingDaemons] = useState(true)
+
+  useEffect(() => {
+    fetchDaemons()
+  }, [])
+
+  const fetchDaemons = async () => {
+    try {
+      const response = await fetch("/api/admin/get-daemons")
+      const result = await response.json()
+      if (response.ok) {
+        setDaemons(result.daemons)
+      }
+    } catch (error) {
+      console.error("Error fetching daemons:", error)
+    } finally {
+      setLoadingDaemons(false)
+    }
+  }
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }))
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsLoading(true)
+    setMessage("")
+
+    try {
+      const response = await fetch("/api/admin/create-daemon", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      })
+
+      const result = await response.json()
+
+      if (response.ok) {
+        setMessage("Daemon creado exitosamente")
+        setFormData({ email: "", password: "", name: "" })
+      } else {
+        setMessage(result.error || "Error al crear daemon")
+      }
+    } catch (error) {
+      setMessage("Error de conexión")
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   return (
     <div>
       <h2 className="text-2xl font-bold dark:text-white mb-4">Daemons Management</h2>
-      <p className="dark:text-white mb-4">See, edit (or destroy Daemons)</p>
+      <p className="dark:text-gray-400 mb-6">See, edit (or destroy daemons)</p>
+
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
+        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Add new Daemon</h3>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Name
+            </label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={handleInputChange}
+              required
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+              placeholder="Name"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
+              required
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+              placeholder="daemon@example.com"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleInputChange}
+              required
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+              placeholder="Password"
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white font-medium py-2 px-4 rounded-md transition-colors"
+          >
+            {isLoading ? "Creating..." : "Create Daemon"}
+          </button>
+        </form>
+
+        {message && (
+          <div
+            className={`mt-4 p-3 rounded-md ${
+              message.includes("exitosamente")
+                ? "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300"
+                : "bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300"
+            }`}
+          >
+            {message}
+          </div>
+        )}
+      </div>
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Demon's List</h3>
+
+        {loadingDaemons ? (
+          <p className="text-gray-600 dark:text-gray-400">Loading daemons...</p>
+        ) : daemons.length === 0 ? (
+          <p className="text-gray-600 dark:text-gray-400">There's no daemons</p>
+        ) : (
+          <div className="space-y-4">
+            {daemons.map((daemon) => (
+              <EditDaemonCard key={daemon.id} daemon={daemon} onUpdate={fetchDaemons} />
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   )
 }
