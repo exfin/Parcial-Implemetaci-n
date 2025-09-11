@@ -1,5 +1,4 @@
 import type React from "react"
-
 import { useAuth, userRoles } from "../../contexts/auth-context"
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
@@ -9,20 +8,18 @@ interface AdminRouteProps {
 }
 
 export function AdminRoute({ children }: AdminRouteProps) {
-  const { user, isLoading } = useAuth()
+  const { role, isLoading } = useAuth()
   const navigate = useNavigate()
 
   useEffect(() => {
     if (!isLoading) {
-      if (!user) {
-        // Si no está autenticado, redirigir al login
+      if (!role) {
         navigate("/login")
-      } else if (user.role !== userRoles.admin) {
-        // Si no es admin, redirigir al dashboard
+      } else if (role !== userRoles.admin) {
         navigate("/")
       }
     }
-  }, [user, isLoading, navigate])
+  }, [role, isLoading, navigate])
 
   if (isLoading) {
     return (
@@ -32,7 +29,7 @@ export function AdminRoute({ children }: AdminRouteProps) {
     )
   }
 
-  if (!user || user.role !== userRoles.admin) {
+  if (!role || role !== userRoles.admin) {
     return null
   }
 

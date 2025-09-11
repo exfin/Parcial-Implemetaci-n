@@ -12,11 +12,11 @@ export function Login() {
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
 
-  const { login, user } = useAuth()
+  const { login, token } = useAuth()
   const location = useLocation()
 
   // Si ya está autenticado, redirigir
-  if (user) {
+  if (token) {
     const from = location.state?.from?.pathname || "/"
     return <Navigate to={from} replace />
   }

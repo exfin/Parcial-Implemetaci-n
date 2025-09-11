@@ -45,7 +45,6 @@ export default function App() {
               </Route>
               <Route path="/daemonpanel" element={<DaemonRoute><DaemonPanel></DaemonPanel></DaemonRoute>}>
                 <Route path="addvictim" element={<AddVictims></AddVictims>}></Route>
-                <Route path="daemonstats" element={<DaemonStatistics></DaemonStatistics>}></Route>
                 <Route path="submitreport" element={<SubmitReport></SubmitReport>}></Route>
               </Route>
             </Routes>

@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useAuth } from "../../contexts/auth-context"
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
@@ -12,14 +11,14 @@ interface NetworkadRouteProps {
 }
 
 export function NetworkadRoute({ children }: NetworkadRouteProps) {
-  const { user, isLoading } = useAuth()
+  const { role, isLoading, token } = useAuth()
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (!isLoading && (!user || user.role !== userRoles.networkad)) {
+    if (!isLoading && (!token || role !== userRoles.networkad)) {
       navigate("/")
     }
-  }, [user, isLoading, navigate])
+  }, [role, token, isLoading, navigate])
 
   if (isLoading) {
     return (
@@ -29,7 +28,7 @@ export function NetworkadRoute({ children }: NetworkadRouteProps) {
     )
   }
 
-  if (!user || user.role !== userRoles.networkad) {
+  if (!token || role !== userRoles.networkad) {
     return null
   }
 

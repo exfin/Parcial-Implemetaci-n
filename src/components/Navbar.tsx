@@ -23,29 +23,27 @@ const defaultItems: NavItem[] = [
   { label: "Inicio", href: "/" },
   { label: "Daemon", href: "/daemonpanel", requiresAuth: true },
   { label: "Admin", href: "/adminpanel", requiresAdmin: true },
-  { label: "Resistance", href: "/resistance"},
+  { label: "Resistance", href: "/resistance" },
 ]
 
 export function Navbar({ brand = "Mi App", items = defaultItems, className = "" }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false)
   const location = useLocation()
-  const { user, logout, canAccessDashboard, canAccessReports, canAccessAdmin } = useAuth()
+  const { role, token, logout, canAccessDashboard, canAccessReports, canAccessAdmin } = useAuth()
 
   const toggleMenu = () => setIsOpen(!isOpen)
 
-  const isActiveLink = (href: string) => {
-    return location.pathname === href
-  }
+  const isActiveLink = (href: string) => location.pathname === href
 
   const visibleItems = items.filter((item) => {
     if (item.requiresAdmin) {
-      return user !== null && canAccessAdmin()
+      return role !== null && canAccessAdmin()
     }
     if (item.requiresNetworkad) {
-      return user !== null && canAccessReports()
+      return role !== null && canAccessReports()
     }
     if (item.requiresAuth) {
-      return user !== null && canAccessDashboard()
+      return role !== null && canAccessDashboard()
     }
     return true
   })
@@ -55,20 +53,20 @@ export function Navbar({ brand = "Mi App", items = defaultItems, className = "" 
     setIsOpen(false)
   }
 
-  const getUserRoleDisplay = () => {
-  if (!user) return ""
-  switch (user.role) {
-    case userRoles.admin:
-      return "Admin"
-    case userRoles.networkad:
-      return "Network Admin"
-    case userRoles.daemon:
-      return "Daemon"
-    default:
-      return "Usuario"
+  const getRoleDisplay = () => {
+    switch (role) {
+      case userRoles.admin:
+        return "Admin"
+      case userRoles.networkad:
+        return "Network Admin"
+      case userRoles.daemon:
+        return "Daemon"
+      default:
+        return "Usuario"
+    }
   }
-}
 
+  const isLoggedIn = !!token
 
   return (
     <nav className={`bg-white dark:bg-black shadow-lg border-b border-gray-200 dark:border-gray-700 ${className}`}>
@@ -98,10 +96,10 @@ export function Navbar({ brand = "Mi App", items = defaultItems, className = "" 
               </Link>
             ))}
 
-            {user ? (
+            {isLoggedIn ? (
               <div className="flex items-center space-x-4">
                 <span className="text-sm text-gray-700 dark:text-gray-300">
-                  Hi, {user.name} ({getUserRoleDisplay()})
+                  Rol: {getRoleDisplay()}
                 </span>
                 <button
                   onClick={handleLogout}
@@ -155,10 +153,10 @@ export function Navbar({ brand = "Mi App", items = defaultItems, className = "" 
             </Link>
           ))}
 
-          {user ? (
+          {isLoggedIn ? (
             <div className="border-t border-gray-200 dark:border-gray-600 pt-2 mt-2">
               <div className="px-3 py-2 text-sm text-gray-700 dark:text-gray-300">
-                Hola, {user.name} ({getUserRoleDisplay()})
+                Rol: {getRoleDisplay()}
               </div>
               <button
                 onClick={handleLogout}

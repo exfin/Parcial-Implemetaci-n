@@ -1,10 +1,9 @@
 "use client"
 
-import { useAuth } from "../contexts/auth-context"
 import { Outlet, Link } from "react-router-dom"
 
 export function DaemonPanel(){
-    const { user } = useAuth()
+    
 
     return(
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -12,7 +11,7 @@ export function DaemonPanel(){
                 <div className="mb-8">
                     <h1 className="text-3xl font-bold text-gray-900 dark:text-white">DaemonPanel</h1>
                     <p className="text-gray-600 dark:text-gray-400 mt-2">
-                        Welcome {user?.name}
+                        Welcome 
                     </p>
                 </div>
 
@@ -24,12 +23,6 @@ export function DaemonPanel(){
                         <button className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-md transition-colors">
                             <Link to="addvictim" >
                                 Add a Victim
-                            </Link>
-                        </button>
-
-                        <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors">
-                            <Link to="daemonstats" >
-                                My stats
                             </Link>
                         </button>
 

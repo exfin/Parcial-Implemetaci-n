@@ -21,10 +21,12 @@ export function EditDaemonCard({ daemon, onUpdate }: { daemon: any; onUpdate: ()
   const handleUpdate = async () => {
     setIsUpdating(true)
     try {
-      const response = await fetch("/api/admin/update-daemon", {
+      const token = localStorage.getItem("jwt_token")
+      const response = await fetch(`${import.meta.env.VITE_PORT}/api/user/${daemon.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify({
           id: daemon.id,
@@ -34,6 +36,7 @@ export function EditDaemonCard({ daemon, onUpdate }: { daemon: any; onUpdate: ()
 
       if (response.ok) {
         setIsEditing(false)
+        console.log("ok")
         onUpdate()
       }
     } catch (error) {
@@ -110,7 +113,8 @@ export function EditDaemonCard({ daemon, onUpdate }: { daemon: any; onUpdate: ()
           <div>
             <h4 className="font-semibold text-gray-900 dark:text-white">{daemon.name}</h4>
             <p className="text-gray-600 dark:text-gray-400">{daemon.email}</p>
-            <p className="text-sm text-gray-500 dark:text-gray-500">Rol: {daemon.role}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-500">Role: {daemon.role}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-500">ID: {daemon.id}</p>
           </div>
           <button
             onClick={() => setIsEditing(true)}

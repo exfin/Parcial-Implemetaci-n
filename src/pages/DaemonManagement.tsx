@@ -1,12 +1,13 @@
 import { useState } from "react"
 import { useEffect } from "react"
 import { EditDaemonCard } from "../components/cards/EditDaemon-card"
+import { userRoles } from "../types/User"
 
 export function DaemonManagement() {
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
     name: "",
+    email: "",
+    password: ""
   })
   const [isLoading, setIsLoading] = useState(false)
   const [message, setMessage] = useState("")
@@ -19,17 +20,34 @@ export function DaemonManagement() {
 
   const fetchDaemons = async () => {
     try {
-      const response = await fetch("/api/admin/get-daemons")
-      const result = await response.json()
-      if (response.ok) {
-        setDaemons(result.daemons)
+      setLoadingDaemons(true);
+      const token = localStorage.getItem("jwt_token");
+
+      const response = await fetch(
+          `${import.meta.env.VITE_PORT}/api/user/find-by-role?role=${userRoles.daemon}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`, 
+            },
+          }
+        );
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`Failed to fetch daemons: ${errorText}`);
+        }
+
+        const result = await response.json();
+        setDaemons(result.data || []);
+      } catch (error) {
+        console.error("Error fetching daemons:", error);
+        setDaemons([]);
+      } finally {
+        setLoadingDaemons(false);
       }
-    } catch (error) {
-      console.error("Error fetching daemons:", error)
-    } finally {
-      setLoadingDaemons(false)
-    }
-  }
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -45,10 +63,12 @@ export function DaemonManagement() {
     setMessage("")
 
     try {
-      const response = await fetch("/api/admin/create-daemon", {
+      const token = localStorage.getItem("jwt_token");
+      const response = await fetch(`${import.meta.env.VITE_PORT}/api/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify(formData),
       })
@@ -70,7 +90,7 @@ export function DaemonManagement() {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold dark:text-white mb-4">Daemons Management</h2>
+      <h2 className="text-2xl font-bold dark:text-white mb-4">Daemon's Management</h2>
       <p className="dark:text-gray-400 mb-6">See, edit (or destroy daemons)</p>
 
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
@@ -147,7 +167,7 @@ export function DaemonManagement() {
         )}
       </div>
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Demon's List</h3>
+        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Daemon's List</h3>
 
         {loadingDaemons ? (
           <p className="text-gray-600 dark:text-gray-400">Loading daemons...</p>

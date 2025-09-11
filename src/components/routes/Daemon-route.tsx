@@ -10,7 +10,7 @@ interface DaemonRouteProps {
 }
 
 export function DaemonRoute({ children }: DaemonRouteProps) {
-  const { user, token, isLoading } = useAuth()
+  const { role, token, isLoading } = useAuth()
   const location = useLocation()
 
   if (isLoading) {
@@ -21,12 +21,11 @@ export function DaemonRoute({ children }: DaemonRouteProps) {
     )
   }
 
-  if (!user || !token) {
-    // Redirigir al login guardando la ubicación actual
+  if (!token) {
     return <Navigate to="/login" state={{ from: location }} replace />
   }
 
-  if (user.role !== userRoles.daemon && user.role !== userRoles.admin) {
+  if (role !== userRoles.daemon && role !== userRoles.admin) {
     return <Navigate to="/" replace />
   }
 
