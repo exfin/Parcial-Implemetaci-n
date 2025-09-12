@@ -1,92 +1,91 @@
-import { useState } from "react"
-import { useEffect } from "react"
-import { EditDaemonCard } from "../components/cards/EditDaemon-card"
-import { userRoles } from "../types/User"
+import { useEffect, useState } from 'react';
+import { EditDaemonCard } from '../components/cards/EditDaemon-card';
+import { userRoles } from '../types/User';
 
 export function DaemonManagement() {
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: ""
-  })
-  const [isLoading, setIsLoading] = useState(false)
-  const [message, setMessage] = useState("")
-  const [daemons, setDaemons] = useState<any[]>([])
-  const [loadingDaemons, setLoadingDaemons] = useState(true)
+    name: '',
+    email: '',
+    password: '',
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState('');
+  const [daemons, setDaemons] = useState<any[]>([]);
+  const [loadingDaemons, setLoadingDaemons] = useState(true);
 
   useEffect(() => {
-    fetchDaemons()
-  }, [])
+    fetchDaemons();
+  }, []);
 
   const fetchDaemons = async () => {
     try {
       setLoadingDaemons(true);
-      const token = localStorage.getItem("jwt_token");
+      const token = localStorage.getItem('jwt_token');
 
       const response = await fetch(
-          `${import.meta.env.VITE_PORT}/api/user/find-by-role?role=${userRoles.daemon}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": `Bearer ${token}`, 
-            },
-          }
-        );
-
-        if (!response.ok) {
-          const errorText = await response.text();
-          throw new Error(`Failed to fetch daemons: ${errorText}`);
+        `${import.meta.env.VITE_PORT}/api/user/find-by-role?role=${userRoles.daemon}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
         }
+      );
 
-        const result = await response.json();
-        setDaemons(result.data || []);
-      } catch (error) {
-        console.error("Error fetching daemons:", error);
-        setDaemons([]);
-      } finally {
-        setLoadingDaemons(false);
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Failed to fetch daemons: ${errorText}`);
       }
+
+      const result = await response.json();
+      setDaemons(result.data || []);
+    } catch (error) {
+      console.error('Error fetching daemons:', error);
+      setDaemons([]);
+    } finally {
+      setLoadingDaemons(false);
+    }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
-    }))
-  }
+    }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-    setMessage("")
+    e.preventDefault();
+    setIsLoading(true);
+    setMessage('');
 
     try {
-      const token = localStorage.getItem("jwt_token");
-      const response = await fetch(`${import.meta.env.VITE_PORT}/api/auth/register`, {
-        method: "POST",
+      const token = localStorage.getItem('jwt_token');
+      const response = await fetch(`${import.meta.env.VITE_PORT}/api/user/create-daemon`, {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(formData),
-      })
+      });
 
-      const result = await response.json()
+      const result = await response.json();
 
       if (response.ok) {
-        setMessage("Daemon creado exitosamente")
-        setFormData({ email: "", password: "", name: "" })
+        setMessage('Daemon creado exitosamente');
+        setFormData({ email: '', password: '', name: '' });
       } else {
-        setMessage(result.error || "Error al crear daemon")
+        setMessage(result.error || 'Error al crear daemon');
       }
     } catch (error) {
-      setMessage("Error de conexión")
+      setMessage('Error de conexión');
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div>
@@ -98,7 +97,10 @@ export function DaemonManagement() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            >
               Name
             </label>
             <input
@@ -114,7 +116,10 @@ export function DaemonManagement() {
           </div>
 
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            >
               Email
             </label>
             <input
@@ -130,7 +135,10 @@ export function DaemonManagement() {
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            >
               Password
             </label>
             <input
@@ -150,16 +158,16 @@ export function DaemonManagement() {
             disabled={isLoading}
             className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white font-medium py-2 px-4 rounded-md transition-colors"
           >
-            {isLoading ? "Creating..." : "Create Daemon"}
+            {isLoading ? 'Creating...' : 'Create Daemon'}
           </button>
         </form>
 
         {message && (
           <div
             className={`mt-4 p-3 rounded-md ${
-              message.includes("exitosamente")
-                ? "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300"
-                : "bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300"
+              message.includes('exitosamente')
+                ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300'
+                : 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300'
             }`}
           >
             {message}
@@ -182,5 +190,5 @@ export function DaemonManagement() {
         )}
       </div>
     </div>
-  )
+  );
 }
