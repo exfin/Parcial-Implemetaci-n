@@ -16,6 +16,7 @@ import { VictimsManagement } from "./pages/VictimsManagement"
 import { SubmitReport } from "./pages/SubmitReport"
 import { Resistance } from "./pages/Resistance"
 import { Footer } from "./components/Footer"
+import { ManageContent } from "./pages/ManageContent"
 
 export default function App() {
   return (
@@ -42,6 +43,7 @@ export default function App() {
                 <Route path="daerewards" element={<DaemonReward></DaemonReward>} />
                 <Route path="daereports" element={<DaemonReports></DaemonReports>} />
                 <Route path="victims" element={<VictimsManagement></VictimsManagement>} />
+                <Route path="content" element={<ManageContent></ManageContent>} />
               </Route>
               <Route path="/daemonpanel" element={<DaemonRoute><DaemonPanel></DaemonPanel></DaemonRoute>}>
                 <Route path="addvictim" element={<AddVictims></AddVictims>}></Route>

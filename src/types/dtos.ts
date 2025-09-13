@@ -31,6 +31,15 @@ export interface ReportDTO {
   updatedAt: string
 }
 
-export interface VictimDTO{
-
+export interface PublicContentDTO {
+  id: number
+  type: string
+  title: string
+  bodyMd: string
+  imageUrl: string
+  altText: string
+  submittedBy: UserDTO
+  approved: boolean
+  createdAt: string
+  updatedAt: string | null
 }
