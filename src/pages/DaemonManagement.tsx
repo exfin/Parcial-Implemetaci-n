@@ -64,7 +64,7 @@ export function DaemonManagement() {
 
     try {
       const token = localStorage.getItem("jwt_token");
-      const response = await fetch(`${import.meta.env.VITE_PORT}/api/auth/register`, {
+      const response = await fetch(`${import.meta.env.VITE_PORT}/api/user/create-daemon`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -78,8 +78,9 @@ export function DaemonManagement() {
       if (response.ok) {
         setMessage("Daemon creado exitosamente")
         setFormData({ email: "", password: "", name: "" })
+        window.location.reload();
       } else {
-        setMessage(result.error || "Error al crear daemon")
+        setMessage(result.message || "Error al crear daemon")
       }
     } catch (error) {
       setMessage("Error de conexión")

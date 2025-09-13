@@ -53,13 +53,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       const { token, role } = result.data
 
-      console.log(token)
-      console.log(role)
 
       setToken(token)
       setRole(role)
 
-      localStorage.setItem("jwt_token", token) // no need to JSON.stringify for plain strings
+      localStorage.setItem("jwt_token", token) 
       localStorage.setItem("user_role", role)
 
       return true

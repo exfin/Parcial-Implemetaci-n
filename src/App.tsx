@@ -10,7 +10,7 @@ import { DaemonManagement } from "./pages/DaemonManagement"
 import { DaemonReward } from "./pages/DaemonReward"
 import { DaemonReports } from "./pages/DaemonReports"
 import { DaemonPanel } from "./pages/DaemonPanel"
-import { DaemonStatistics } from "./pages/DaemonStatistics"
+import { DaemonVictims } from "./pages/DaemonVictims"
 import { AddVictims } from "./pages/AddVictims"
 import { VictimsManagement } from "./pages/VictimsManagement"
 import { SubmitReport } from "./pages/SubmitReport"
@@ -46,6 +46,7 @@ export default function App() {
               <Route path="/daemonpanel" element={<DaemonRoute><DaemonPanel></DaemonPanel></DaemonRoute>}>
                 <Route path="addvictim" element={<AddVictims></AddVictims>}></Route>
                 <Route path="submitreport" element={<SubmitReport></SubmitReport>}></Route>
+                <Route path="myvictims" element={<DaemonVictims></DaemonVictims>}></Route>
               </Route>
             </Routes>
           </main>
