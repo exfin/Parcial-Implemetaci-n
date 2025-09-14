@@ -99,14 +99,14 @@ export function Navbar({ brand = "Mi App", items = defaultItems, className = "" 
             {isLoggedIn ? (
               <div className="flex items-center space-x-4">
                 <span className="text-sm text-gray-700 dark:text-gray-300">
-                  Rol: {getRoleDisplay()}
+                  Role: {getRoleDisplay()}
                 </span>
                 <button
                   onClick={handleLogout}
                   className="inline-flex items-center px-3 py-2 rounded-md text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-200"
                 >
                   <LogOut size={16} className="mr-1" />
-                  Salir
+                  Log Out
                 </button>
               </div>
             ) : (
@@ -156,14 +156,14 @@ export function Navbar({ brand = "Mi App", items = defaultItems, className = "" 
           {isLoggedIn ? (
             <div className="border-t border-gray-200 dark:border-gray-600 pt-2 mt-2">
               <div className="px-3 py-2 text-sm text-gray-700 dark:text-gray-300">
-                Rol: {getRoleDisplay()}
+                Role: {getRoleDisplay()}
               </div>
               <button
                 onClick={handleLogout}
                 className="w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-200"
               >
                 <LogOut size={16} className="inline mr-2" />
-                Salir
+                Log Out
               </button>
             </div>
           ) : (
